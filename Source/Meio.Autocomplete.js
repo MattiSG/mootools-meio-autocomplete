@@ -1,6 +1,5 @@
 /*
 ---
-
 description: A plugin for enabling autocomplete of a text input or textarea.
 
 authors:
@@ -644,7 +643,7 @@ provides: [Meio.Autocomplete]
 			var node = listChildren[maxVisibleItems - 1] || (listChildren.length ? listChildren[listChildren.length - 1] : null);
 			if (!node) return;
 			node = $(node);
-			// uggly hack to fix the height of the autocomplete list
+			// ugly hack to fix the height of the autocomplete list
 			// TODO rethink about it
 			for (var i = 2; i--;) this.node.setStyle('height', node.getCoordinates(this.list).bottom);
 		},
@@ -661,7 +660,7 @@ provides: [Meio.Autocomplete]
 		mousedown: function(e){
 			e.preventDefault();
 			this.shouldNotBlur = true;
-			if (!(this.focusedItem = this.getItemFromEvent(e))){
+			if (this.focusedItem != this.getItemFromEvent(e)){
 				e.dontHide = true;
 				return true;
 			} 
@@ -686,19 +685,8 @@ provides: [Meio.Autocomplete]
 		},
 		
 		scrollFocusedItem: function(direction){
-			var focusedItemCoordinates = this.focusedItem.getCoordinates(this.list),
-				scrollTop = this.node.scrollTop;
-			if (direction == 'down'){
-				var delta = focusedItemCoordinates.bottom - this.node.getStyle('height').toInt();
-				if ((delta - scrollTop) > 0){
-					this.node.scrollTop = delta;
-				}
-			} else {
-				var top = focusedItemCoordinates.top;
-				if (scrollTop && scrollTop > top){
-					this.node.scrollTop = top;
-				}
-			}
+			var pos = this.focusedItem.getPosition(this.container);
+			this.container.scrollTo(pos.x, pos.y);
 		},
 		
 		getItemFromEvent: function(e){
@@ -712,9 +700,10 @@ provides: [Meio.Autocomplete]
 		
 		render: function(){
 			var node = new Element('div', {'class': this.options.classes.container});
+			this.container = node;
 			if (node.bgiframe) node.bgiframe({top: 0, left: 0});
 			this.list = new Element('ul').inject(node);
-			$(document.body).grab(node);
+			document.body.grab(node);
 			return node;
 		},
 		
