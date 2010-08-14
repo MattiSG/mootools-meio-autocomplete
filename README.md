@@ -12,10 +12,17 @@ Thats not just another autocomplete plugin.
 I made it because i needed it to work like a dom select element and because i wanted it to be flexible in a way that i could use anything as the autocomplete list.
 This plugin can also share the same list element, in a way that it will inject just one dom element on the document if you create more than one autocomplete instance in the same page.
 
-How to use
-----------
+Basic usage
+-----------
 
-This example shows most of its this plugin's options. All the values are the default ones.
+	var autocomplete = new Meio.Autocomplete('text_input_id', data, [options, [listInstance]]);
+
+See below for more details on these arguments.
+
+Options
+-------
+
+This example shows most of this plugin's options. All the values are the default ones.
 
 	#JS
 	var data = [
@@ -23,7 +30,7 @@ This example shows most of its this plugin's options. All the values are the def
 		{"value": 1, "text": "Ajax"},
 	];
 
-	var autocomplete = new Meio.Autocomplete($('text_input_id'), data, {
+	var autocomplete = new Meio.Autocomplete('text_input_id', data, {
 		delay: 200, 			// The delay before rendering the list of options. Usefull when you are using the autocomplete with ajax
 		minChars: 0,			// The minimum number of characters the user has to input before the list of options to select is shown.
 		cacheLength: 20,		// The cache length. Cache will decrease the number of ajax calls. Each time you make a different query it will be cached locally.
@@ -81,6 +88,28 @@ This example shows most of its this plugin's options. All the values are the def
 	},
 		listInstance // The instance of the list. Passing a Meio.Autocomplete.List will allow you to have just one list DOM element, saving resources on a heavy page.
 	);
+	
+Events
+------
+
+The following events are fired by Meio.Autocomplete:
+
+*noItemToList(elements)
+	Fired by onkeypress when there are no options to list.
+	1.	elements	Hash	A Hash containing the ‘field’ and ‘list’ instances.	
+*select(elements, value)
+	Fires when the user selects a suggestion.
+	1.	elements	Hash	A Hash containing the ‘field’ and ‘list’ instances.
+	2.	value		mixed	The value associated with the option that has been selected.
+*deselect
+	Fired when the user deselects a suggestion.
+	1.	elements	Hash	A Hash containing the ‘field’ and ‘list’ instances.
+*	highlight(elements, value)
+	Fired when the user highlights a suggestion, either by hovering over it or by selecting it through keystrokes.
+	1.	elements – (object) An object with the ‘field’ and ‘list’ instances.
+	2.	value — (object or null) The currently highlighted value. Null if the event is actually a deselection (i.e. list gets hidden).
+
+	
 
 Demos
 -----
