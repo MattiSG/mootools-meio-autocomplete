@@ -262,25 +262,39 @@ provides: [Meio.Autocomplete]
 		},
 		
 		update: function(){
-			var data = this.data, list = this.elements.list;
-			var cacheKey = data.getKey(), cached = this.cache.get(cacheKey), html;
+			var data = this.data,
+				list = this.elements.list;
+				
+			var cacheKey = data.getKey(),
+				cached = this.cache.get(cacheKey),
+				html;
+				
 			if (cached){
 				html = cached.html;
 				this.itemsData = cached.data;
 			} else {
 				data = data.get();
-				var itemsHtml = [], itemsData = [], classes = list.options.classes, text = this.inputedText;
-				var filter = this.filters.filter, formatMatch = this.filters.formatMatch, formatItem = this.filters.formatItem;
-				for (var row, i = 0, n = 0; row = data[i++];) if (filter.call(this, text, row)){
-					itemsHtml.push(
-						'<li title="', encode(formatMatch.call(this, text, row)),
-						'" data-index="', n,
-						'" class="', (n%2 ? classes.even : classes.odd), '">',
-						formatItem.call(this, text, row, n),
-						'</li>'
-					);
-					itemsData.push(row);
-					n++;
+				
+				var itemsHtml = [],
+					itemsData = [],
+					classes = list.options.classes,
+					text = this.inputedText;
+					
+				var filter = this.filters.filter,
+					formatMatch = this.filters.formatMatch,
+					formatItem = this.filters.formatItem;
+					
+				for (var row, i = 0; row = data[i++];) {
+					if (filter.call(this, text, row)){
+						itemsHtml.push(
+							'<li title="', encode(formatMatch.call(this, text, row)),
+							'" data-index="', i,
+							'" class="', (i%2 ? classes.even : classes.odd), '">',
+							formatItem.call(this, text, row, i),
+							'</li>'
+						);
+						itemsData.push(row);
+					}
 				}
 				html = itemsHtml.join('');
 				this.cache.set(cacheKey, {html: html, data: itemsData});
@@ -786,7 +800,8 @@ provides: [Meio.Autocomplete]
 		
 		_getValueFromKeys: function(obj, keys){
 			var key, value = obj;
-			for (var i = 0; key = keys[i++];) value = value[key];
+			for (var i = 0; key = keys[i++];)
+				value = value[key];
 			return value;
 		}
 		
